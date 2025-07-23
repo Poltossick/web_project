@@ -1,0 +1,14 @@
+h1 {
+    text-align: center;
+}
+
+@font-face {
+    font-family: 'KnightsQuest';
+    src: url('fonts/KnightsQuest.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+body {
+    margin: 0;
+    background: linear-gradient(to right, #CAC4B0, #99958C);
+}
