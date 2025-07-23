@@ -1,4 +1,6 @@
-# Введение во Flask
+import datetime
+from datetime import datetime
+
 import os.path
 
 import requests
@@ -25,6 +27,13 @@ app.config['SECRET_KEY'] = 'you_never_coming'
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+@app.errorhandler(404)
+def not_found(_):
+    return make_response(({'error': 'Not found'}), 404)
+
+@app.template_filter('str_to_datetime')
+def str_to_datetime(s, format="%Y-%m-%d %H:%M:%S"):
+    return datetime.strptime(s, format)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -86,10 +95,22 @@ def logout():
 @app.route('/boardgames')
 def show_games():
     db_sess = db_session.create_session()
-    games = Games()
-    games = db_sess.query(Games).all()
+    games = db_sess.query(Games).filter(Games.event_date >= datetime.now()).all()
     return render_template('games.html',
-                           title='Настольные игры', games=games)
+                           title='Настольные игры', games=games, datetime=datetime)
+
+
+@app.route('/personal-page')
+def personal_page():
+    db_sess = db_session.create_session()
+    my_games = db_sess.query(Games).filter(current_user == Games.owner).all()
+    if current_user.is_authenticated:
+        return render_template('personal-page.html',
+                               title='Личная страница', games=my_games)
+    else:
+        abort(404)
+
+
 
 
 @app.route('/gamesplay', methods=['POST', 'GET'])
@@ -106,6 +127,53 @@ def add_boardgames():
         return redirect('/boardgames')
     return render_template('/gamesplay.html', title='Добавление игры', form=form)
 
+
+@app.route('/gamesdelete/<int:id_num>', methods=['POST', 'GET'])
+@login_required
+def delete_game(id_num):
+    db_sess = db_session.create_session()
+    game = db_sess.query(Games).filter(
+        Games.id == id_num, Games.owner == current_user
+    ).first()
+    if game:
+        db_sess.delete(game)
+        db_sess.commit()
+    else:
+        abort(404)
+    return redirect('/boardgames')
+
+
+@app.route('/gamesplay/<int:id_num>', methods=['POST', 'GET'])
+@login_required
+def edit_game(id_num):
+    form = GamesForm()
+    if request.method == 'GET':
+        db_sess = db_session.create_session()
+        game = db_sess.query(Games).filter(
+            Games.id == id_num, Games.owner == current_user
+        ).first()
+        if game:
+            form.name_game.data = game.name_game
+            form.content.data = game.content
+            form.event_date.data  = game.event_date
+            form.count_players.data = game.count_players
+        else:
+            abort(404)
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        game = db_sess.query(Games).filter(
+            Games.id == id_num, Games.owner == current_user
+        ).first()
+        if game:
+            game.name_game = form.name_game.data
+            game.content = form.content.data
+            game.event_date = form.event_date.data
+            game.count_players = form.count_players.data
+            db_sess.commit()
+            return redirect('/boardgames')
+        else:
+            abort(404)
+    return render_template('/gamesplay.html', title='Редактирование новости', form=form)
 
 if __name__ == '__main__':
     db_session.global_init('database/news.sqlite')

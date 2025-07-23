@@ -1,10 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block content %}
+{% if current_user.is_authenticated %}
+    <h2>Мои игры</h2>
+<table class="table table-striped table-hover">
+  <tr>
+    <th> № </th>
+    <th> Игра </th>
+    <th> Описание </th>
+    <th> Дата </th>
+    <th> Участники </th>
+    <th> &nbsp; </th>
+    <th> &nbsp; </th>
+  </tr>
+  {% for item in games %}
+  <tr>
+    <td>{{loop.index}}</td>
+    <td>{{item.name_game}}</td>
+    <td>{{item.content}}</td>
+    <td>{{item.event_date}}</td>
+    <td>{{item.count_players}}</td>
+    <td>
+          <a href="/gamesdelete/{{item.id}}" class="btn btn-del btn-sm my-1">
+    &#x1F5D1
+    </a>
+    </td>
+        <td>
+        <a href="/gamesplay/{{item.id}}" class="btn btn-upd btn-sm my-1">
+   &#9999
+    </a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% endif %}
+{% endblock %}

@@ -12,3 +12,19 @@ body {
     margin: 0;
     background: linear-gradient(to right, #CAC4B0, #99958C);
 }
+
+
+.btn-del {
+    background-color: #ff5722; /* Оранжевый */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+  }
+
+.btn-upd{
+    background-color: green; /* Оранжевый */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+  }
+
