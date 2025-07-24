@@ -2,37 +2,64 @@
 
 {% block content %}
 {% if current_user.is_authenticated %}
-    <h2>Мои игры</h2>
+<a href="/gamesplay" class="btn btn-secondary btn-sm my-1 padding-left first_page">
+    Добавить игру
+</a>
+<h2>Мои игры</h2>
 <table class="table table-striped table-hover">
-  <tr>
-    <th> № </th>
-    <th> Игра </th>
-    <th> Описание </th>
-    <th> Дата </th>
-    <th> Участники </th>
-    <th> &nbsp; </th>
-    <th> &nbsp; </th>
-  </tr>
-  {% for item in games %}
-  <tr>
-    <td>{{loop.index}}</td>
-    <td>{{item.name_game}}</td>
-    <td>{{item.content}}</td>
-    <td>{{item.event_date}}</td>
-    <td>{{item.count_players}}</td>
-    <td>
-          <a href="/gamesdelete/{{item.id}}" class="btn btn-del btn-sm my-1">
-    &#x1F5D1
-    </a>
-    </td>
+    <tr>
+        <th> №</th>
+        <th> Игра</th>
+        <th> Описание</th>
+        <th> Дата</th>
+        <th> Участники</th>
+        <th> &nbsp;</th>
+        <th> &nbsp;</th>
+    </tr>
+    {% for item in games %}
+    <tr>
+        <td>{{loop.index}}</td>
+        <td>{{item.name_game}}</td>
+        <td>{{item.content}}</td>
+        <td>{{item.event_date}}</td>
+        <td>{{item.count_players}}</td>
         <td>
-        <a href="/gamesplay/{{item.id}}" class="btn btn-upd btn-sm my-1">
-   &#9999
-    </a>
-    </td>
-  </tr>
-  {% endfor %}
+            <a href="/gamesdelete/{{item.id}}" class="btn btn-del btn-sm my-1">
+                &#x1F5D1
+            </a>
+        </td>
+        <td>
+            <a href="/gamesplay/{{item.id}}" class="btn btn-upd btn-sm my-1">
+                &#9999
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
 </table>
 
+<h2>Мои команды</h2>
+<table class="table table-striped table-hover padding-left first_page">
+    <tr>
+        <th> №</th>
+        <th> Игра</th>
+        <th> Дата</th>
+        <th> Участвую</th>
+        <th> Автор игры</th>
+        <th> &nbsp;</th>
+    </tr>
+    {% for item in teams %}
+    <tr>
+        <td>{{loop.index}}</td>
+        <td>{{item.boardgames.name_game}}</td>
+        <td>{{item.boardgames.event_date}}</td>
+        <td>{{item.players}}</td>
+        <td>{{item.players.name}}</td>
+        <td>
+            <a href="/dontplay/{{item.id}}" class="btn btn-del btn-sm my-1">
+                &#x1F5D1
+            </a>
+    </tr>
+    {% endfor %}
+</table>
 {% endif %}
 {% endblock %}

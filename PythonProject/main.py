@@ -7,6 +7,7 @@ import requests
 from openpyxl.styles.builtins import title
 from pyexpat.errors import messages
 
+from data.teams import Teams
 from forms.loginform import LoginForm
 from forms.boardgames import GamesForm
 from forms.players import Register
@@ -20,6 +21,8 @@ from flask_login import LoginManager, login_user, logout_user, current_user, log
 
 import sqlite3
 from sqlite3 import Error
+
+from forms.teamsform import TeamForm
 
 app = Flask(__name__)
 api = Api(app)
@@ -127,6 +130,20 @@ def add_boardgames():
         return redirect('/boardgames')
     return render_template('/gamesplay.html', title='Добавление игры', form=form)
 
+@app.route('/doplay', methods=['POST', 'GET'])
+@login_required
+def add_teams():
+    form = TeamForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        teams = Teams(players=form.players.data)
+        current_user.teams.append(teams)
+        db_sess.merge(current_user)
+        db_sess.commit()
+        return redirect('/boardgames')
+    return render_template('/games.html', title='Участие в игре', form=form)
+
+
 
 @app.route('/gamesdelete/<int:id_num>', methods=['POST', 'GET'])
 @login_required
@@ -175,6 +192,11 @@ def edit_game(id_num):
             abort(404)
     return render_template('/gamesplay.html', title='Редактирование новости', form=form)
 
+@app.route('/contacts')
+def contacts():
+    return render_template('contacts.html')
+
+
 if __name__ == '__main__':
-    db_session.global_init('database/news.sqlite')
+    db_session.global_init('database/games.sqlite')
     app.run(host='localhost', port=5000, debug=True)

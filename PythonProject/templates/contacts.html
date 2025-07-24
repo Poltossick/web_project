@@ -1,10 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block content %}
+<h1>Свяжитесь с нами!</h1>
+<p>Наши адреса....</p>
+<div class="row">
+    <div class="col-md-8 mx-auto position_on_page">
+        <div style="position:relative;overflow:hidden;"><a
+                href="https://yandex.ru/maps/2/saint-petersburg/?utm_medium=mapframe&utm_source=maps"
+                style="color:#eee;font-size:12px;position:absolute;top:0px;">Санкт‑Петербург</a><a
+                href="https://yandex.ru/maps/2/saint-petersburg/house/pirogovskaya_naberezhnaya_13litz/Z0kYdQNkSEIDQFtjfXV3cH9qYQ==/?ll=30.345289%2C59.961579&utm_medium=mapframe&utm_source=maps&z=17"
+                style="color:#eee;font-size:12px;position:absolute;top:14px;">Пироговская набережная, 13литЗ —
+            Яндекс Карты</a>
+            <iframe src="https://yandex.ru/map-widget/v1/?ll=30.345289%2C59.961579&mode=whatshere&utm_medium=mapframe&utm_source=share&whatshere%5Bpoint%5D=30.344279%2C59.961316&whatshere%5Bzoom%5D=17&z=17"
+                    width="560" height="400" frameborder="1" allowfullscreen="true" style="position:relative;"></iframe>
+        </div>
+    </div>
+</div>
+<h2>Форма обратной связи</h2>
+<form action="/sendmail" method="post" class="feedback position_on_page">
+    <p>Ваше имя: <input type="text" name="name"></p>
+    <p>Ваш email: <input type="email" name="email"></p>
+    <p>Ваше сообщение: <textarea name="message"></textarea></p>
+    <p><input type="submit"> {{mess}}</p>
+</form>
+
+{% endblock %}
