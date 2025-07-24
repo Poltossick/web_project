@@ -2,19 +2,24 @@
 
 {% block content %}
 <h2>Настольные игры</h2>
-
 {% for item in games %}
-<div class="row position_on_page padding-left first_page">
+<div class="row">
     <div class="col-md-6 border rounded">
-        <h3>{{item.name_game}}</h3>
-        <p>{{item.content}}</p>
-        <div>Дата проведения игры: {{item.event_date}}</div>
-        <div>Количество игроков: {{item.count_players}}</div>
-        <div>Организатор: {{item.owner.name}}</div>
+        <ul>
+            <li>
+                <div class="position_on_page">
+                <h3>{{item.name_game}}</h3>
+                <p>{{item.content}}</p>
+                <div>Дата проведения игры: {{item.event_date}}</div>
+                <div>Количество игроков: {{item.count_players}}</div>
+                <div>Организатор: {{item.owner.name}}</div>
+                    </div>
+            </li>
+        </ul>
     </div>
     {% if current_user.is_authenticated %}
 
-{% endif %}
+    {% endif %}
 
     {% endfor %}
 
